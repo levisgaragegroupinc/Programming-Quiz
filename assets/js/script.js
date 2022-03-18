@@ -1,4 +1,4 @@
-//Object with collection of properties made up of key value pairs.
+// Object with collection of properties made up of key value pairs. Holds questions, choices and correct answer "ans".
 var interrogation = [
     {
         queryTitle: 'Which statement is true about while loops?',
@@ -42,26 +42,26 @@ var interrogation = [
     },
 ];
 
-//Starting variables. Score and quiz index value.
+// Starting variables. Score and quiz index value.
 var quizScore = 0;
 var quizIndex = 0; 
 
-//Variables that access elements on the page. 
+// Variables that access elements on the page. 
 var quizClock = document.querySelector("#quizClock");
 var quizStart = document.querySelector("#quizStart");
 var quizQueries = document.querySelector("#quizQueries");
-var mainWrapper = document.querySelector("#mainWrapper");
+// var mainWrapper = document.querySelector("#mainWrapper");
 var quizRestart = document.querySelector('#quizRestart');
 var quizScores = document.querySelector('#quizScores');
 var quizScoreboard = document.querySelector('#quizScoreboard');
 
-//Variables for time left, time remaining, penalty, and creating a ul element. 
+// Variables for time left, time remaining, penalty, and creating a ul element. 
 var secondsRemain = 100;
 var quizPenalty = 5;
 var quizTimeInterval = 0;
 var quizUlElement = document.createElement('ul');
 
-//Take quiz button starts timer. First event listener and function.
+// Take quiz button starts timer. First event listener and function.
 quizStart.addEventListener('click', function (){
     if(quizTimeInterval === 0) {
         quizTimeInterval = setInterval(function (){
@@ -70,7 +70,9 @@ quizStart.addEventListener('click', function (){
 
             if (secondsRemain <= 0) {
                 clearInterval(quizTimeInterval);
-                quizComplete() // function defined on line 134.
+
+                // Calls function on line 135.
+                quizComplete() 
                 quizClock.textContent = "Quiz time has ended!";
             }            
         }, 1000);
@@ -78,7 +80,7 @@ quizStart.addEventListener('click', function (){
     quizDisplay(quizIndex); //function defined on line 83.
 });
 
-//Function that displays the user choices.
+// Function that displays the user choices.
 function quizDisplay(quizIndex) {
     quizQueries.innerHTML = "";
     quizUlElement.innerHTML = "";
@@ -98,13 +100,13 @@ function quizDisplay(quizIndex) {
     })
 };
 
-//Function that compares choices with the correct answer.
+// Function that compares choices with the correct answer.
 function quizCompare(event) {
     var quizElement = event.target;
 
     if (quizElement.matches('li')){
         var quizDivCreate = document.createElement('div');
-        quizDivCreate.setAttribute('id', 'quizDiv'); //add this selector to the css file.
+        quizDivCreate.setAttribute('id', 'quizDiv');
         
         if(quizElement.textContent == interrogation[quizIndex].ans) {
             quizScore++;
@@ -115,10 +117,10 @@ function quizCompare(event) {
         };
     };
 
-    //Increments the index value by one.
+    // Increments the index value by one.
     quizIndex++;
 
-    //Completed quiz, display score and time remaining.     
+    // Completed quiz, display score and time remaining.     
     if (quizIndex >= interrogation.length) {
         quizComplete();
         var removeQuizDiv = document.querySelector('#quizDiv');
@@ -129,17 +131,17 @@ function quizCompare(event) {
     quizQueries.appendChild(quizDivCreate);
 };
 
-//Clears the quiz query content and replaces the clock with a message when quiz has ended.
+// Clears the quiz query content and replaces the clock with a message when quiz has ended.
 function quizComplete () {
     quizQueries.innerHTML = '';
     quizClock.innerHTML = 'Quiz has Ended!';
 
     var quizH1Element = document.createElement('h1');
-    quizH1Element.setAttribute('class', 'results') //define an id value here
+    quizH1Element.setAttribute('class', 'results')
     quizH1Element.textContent = 'Quiz Results';
     quizQueries.appendChild(quizH1Element);
 
-    //Variables to store user initials input.
+    // Display quiz time remaing after quiz has ended.
     if (secondsRemain >=0) {
         var secondsLeftOver = secondsRemain;
         var quizP2Element = document.createElement('p');
@@ -155,14 +157,14 @@ function quizComplete () {
         quizQueries.appendChild(scoreDivCreate); 
     };
 
-    //label for quiz taker initials form field
+    // Label for quiz taker initials form field
     var quizLabel = document.createElement('label')
     quizLabel.setAttribute('class', "results");
     quizLabel.textContent = 'Your initials: ';
 
     quizQueries.appendChild(quizLabel);
 
-    //quiz taker initials input
+    // Input field for user initials.
     var initialsInput = document.createElement('input');
     initialsInput.setAttribute('type', 'text');
     initialsInput.setAttribute('id', 'initialsField');
@@ -170,15 +172,14 @@ function quizComplete () {
 
     quizQueries.appendChild(initialsInput);
 
-    //quiz taker initials submit button
+    // Button to submit user initials.
     var InitialsSubmit = document.createElement('button');
     InitialsSubmit.setAttribute('type', 'submit');
-    // InitialsSubmit.setAttribute('id', '');
     InitialsSubmit.textContent = 'Save';
 
     quizQueries.appendChild(InitialsSubmit);
 
-    //Restart quiz
+    // Restart quiz
     var quizResetButton = document.createElement('button');
     quizResetButton.textContent = 'Reset Quiz';
 
@@ -189,7 +190,7 @@ function quizComplete () {
         window.location = "./index.html";
     });
 
-        //Event listener for user initials input and storage of input
+        // Event listener for user initials input and storage of input.
         InitialsSubmit.addEventListener('click', function(){
         var yourInitials = initialsInput.value;
 
@@ -210,8 +211,12 @@ function quizComplete () {
             } else {
                 historicalScores = JSON.parse(historicalScores);
             };
+
+            // Remove input field after user submits initials.
+            var removeInputForm = document.querySelector('#quizQueries');
+            removeInputForm.remove();
             
-            //Combine new user score with previous user scores
+            // Combine new user score with previous user scores.
             historicalScores.push(quizFinalScore);
 
             var newHistoricalScores = JSON.stringify(historicalScores);
@@ -230,20 +235,4 @@ function quizComplete () {
             }; 
         };
     });
-
 };
-
-
-//Acceptance Criteria
-//
-// GIVEN I am taking a code quiz
-// WHEN I click the start button
-// THEN a timer starts and I am presented with a question
-// WHEN I answer a question
-// THEN I am presented with another question
-// WHEN I answer a question incorrectly
-// THEN time is subtracted from the clock
-// WHEN all questions are answered or the timer reaches 0
-// THEN the game is over
-// WHEN the game is over
-// THEN I can save my initials and my score
